@@ -12,7 +12,7 @@
         </ol>
     </nav>
 
-    <h1>Detalhes do Plano {{ $plan->name }}</h1>
+    <h1>Detalhes do Plano <b>{{ $plan->name }}</b> <a href="{{ route('details.plan.create', $plan->url) }}" class="btn btn-dark">Criar detalhe</a></h1>
 @stop
 
 @section('content')

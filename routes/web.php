@@ -10,6 +10,8 @@ Route::prefix('admin')
      * Routes Details Plans
      */
     Route::get('plans/{url}/details', 'DetailPlanController@index')->name('details.plan.index');
+    Route::get('plans/{url}/details/create', 'DetailPlanController@create')->name('details.plan.create');
+    Route::post('plans/{url}/details', 'DetailPlanController@store')->name('details.plan.store');
 
     /**
      * Routes Plans
