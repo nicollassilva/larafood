@@ -21,7 +21,7 @@
             <form method="POST" action="{{ route('permissions.destroy', $permission->id) }}">
                 @method('DELETE')
                 @csrf
-                <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i> Excluir perfil</button>
+                <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i> Excluir permissão</button>
             </form>
         </div>
     </div>
