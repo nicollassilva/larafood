@@ -1,19 +1,19 @@
 @extends('adminlte::page')
 
-@section('title', 'Editando: ' . $user->name)
+@section('title', 'Editando: ' . $category->name)
 
 @section('content_header')
-    <h1>Editando Usuário: <b>{{ $user->name }}</b></h1>
+    <h1>Editando Categoria: <b>{{ $category->name }}</b></h1>
 @stop
 
 @section('content')
     <div class="card">
         <div class="card-body">
-            <form action="{{ route('users.update', $user->id) }}" method="POST" class="form">
+            <form action="{{ route('categories.update', $category->id) }}" method="POST" class="form">
                 @csrf
                 @method('PUT')
                 
-                @include('admin.pages.users._partials.form')
+                @include('admin.pages.categories._partials.form')
             </form>
         </div>
     </div>
