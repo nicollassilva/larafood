@@ -23,7 +23,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = $this->repository->paginate();
+        $users = $this->repository->tenantUser()->paginate();
 
         return view('admin.pages.users.index', [
             'users' => $users
@@ -50,8 +50,9 @@ class UserController extends Controller
     {
         $data = $request->all();
         $data['tenant_id'] = auth()->user()->tenant_id;
+        $data['password'] = bcrypt($data['password']);
 
-        $this->repository->create($request->all());
+        $this->repository->create($data);
 
         return redirect()
                     ->route('users.index')
@@ -66,11 +67,11 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        if(!$profile = $this->repository->find($id))
+        if(!$user = $this->repository->tenantUser()->find($id))
             return redirect()->back();
 
         return view('admin.pages.users.show', [
-            'profile' => $profile
+            'user' => $user
         ]);
     }
 
@@ -82,11 +83,11 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        if(!$profile = $this->repository->find($id))
+        if(!$user = $this->repository->tenantUser()->find($id))
             return redirect()->back();
 
         return view('admin.pages.users.edit', [
-            'profile' => $profile
+            'user' => $user
         ]);
     }
 
@@ -99,10 +100,16 @@ class UserController extends Controller
      */
     public function update(StoreUpdateUser $request, $id)
     {
-        if(!$profile = $this->repository->find($id))
+        if(!$user = $this->repository->tenantUser()->find($id))
             return redirect()->back();
 
-        $profile->update($request->all());
+            $data = $request->only(['name', 'email']);
+        
+        if($request->password) {
+            $data['password'] = bcrypt($request->password);
+        }
+
+        $user->update($data);
 
         return redirect()
                 ->route('users.index')
@@ -117,10 +124,10 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        if(!$profile = $this->repository->find($id))
+        if(!$user = $this->repository->tenantUser()->find($id))
             return redirect()->back();
 
-        $profile->delete();
+        $user->delete();
         return redirect()
             ->route('users.index')
             ->with('message', 'Perfil deletado com sucesso!');
@@ -141,7 +148,7 @@ class UserController extends Controller
                 $query->where('name', 'LIKE', "%{$request->filter}%")
                       ->orWhere('email', 'LIKE', "%{$request->filter}%");;
             }
-        })->paginate();
+        })->latest()->tenantUser()->paginate();
 
         return view('admin.pages.users.index', [
             'users' => $users,
